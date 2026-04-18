@@ -1,0 +1,44 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Soundboard"
+run/main_scene="uid://cmain001abc0a"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+boot_splash/minimum_display_time=1000
+config/main_scene="res://main.tscn"
+
+[audio]
+
+driver/enable_input=true
+
+[autoload]
+
+ConfigManager="*res://scripts/data/config_manager.gd"
+AudioService="*res://scripts/audio_service.gd"
+
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=768
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"

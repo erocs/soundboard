@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://cmain001abc0a"]
+
+[ext_resource type="Script" uid="uid://codefvsniqiol" path="res://scripts/main.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://csndbrd01abc0" path="res://scenes/soundboard/soundboard.tscn" id="2_soundboard"]
+[ext_resource type="PackedScene" uid="uid://cfldrpnl01ab0" path="res://scenes/soundboard/folder_panel.tscn" id="3_folder_panel"]
+[ext_resource type="PackedScene" uid="uid://caudicap01ab0" path="res://scenes/audio_capture/audio_capture.tscn" id="4_audio_capture"]
+[ext_resource type="PackedScene" uid="uid://caudioedt01a0" path="res://scenes/audio_editor/audio_editor.tscn" id="5_audio_editor"]
+[ext_resource type="PackedScene" uid="uid://cfilmgr01ab0" path="res://scenes/file_manager/file_manager.tscn" id="6_file_manager"]
+[ext_resource type="PackedScene" uid="uid://bduoje8alk0m6" path="res://scenes/settings/settings_panel.tscn" id="7_settings"]
+
+[node name="Main" type="Control" unique_id=407952681]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2078983461]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="VBoxContainer" unique_id=1185312055]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="SilenceBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1234567890]
+layout_mode = 2
+text = "Silence"
+
+[node name="AddSoundBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1857263250]
+layout_mode = 2
+text = "Add Sound Button"
+
+[node name="AddFolderBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1942250288]
+layout_mode = 2
+text = "Add Folder"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/TopBar" unique_id=441403606]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VolLabel" type="Label" parent="VBoxContainer/TopBar" unique_id=1974538123]
+layout_mode = 2
+text = "Vol:"
+vertical_alignment = 1
+
+[node name="VolSlider" type="HSlider" parent="VBoxContainer/TopBar" unique_id=1318958397]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="RecordBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1082572824]
+layout_mode = 2
+text = "Record Mic"
+
+[node name="FilesBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1999847731]
+layout_mode = 2
+text = "Files"
+
+[node name="SettingsBtn" type="Button" parent="VBoxContainer/TopBar" unique_id=1230350776]
+layout_mode = 2
+text = "Settings"
+
+[node name="SoundboardPanel" parent="VBoxContainer" unique_id=939722032 instance=ExtResource("2_soundboard")]
+layout_mode = 2
+
+[node name="Backdrop" type="Control" parent="." unique_id=137913742]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FolderPanel" parent="." unique_id=925957857 instance=ExtResource("3_folder_panel")]
+layout_mode = 0
+
+[node name="AudioCapturePanel" parent="." unique_id=602096319 instance=ExtResource("4_audio_capture")]
+
+[node name="AudioEditorPanel" parent="." unique_id=569835055 instance=ExtResource("5_audio_editor")]
+
+[node name="FileManagerPanel" parent="." unique_id=37183478 instance=ExtResource("6_file_manager")]
+
+[node name="SettingsPanel" parent="." unique_id=1887561378 instance=ExtResource("7_settings")]
+
+[node name="ContextMenu" type="PopupMenu" parent="." unique_id=975916985]

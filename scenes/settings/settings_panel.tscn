@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3 uid="uid://csettings01ab0"]
+
+[ext_resource type="Script" path="res://scripts/settings/settings_panel.gd" id="1_script"]
+
+[node name="SettingsPanel" type="Window"]
+title = "Settings"
+size = Vector2i(510, 250)
+visible = false
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GridColumnsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridColumnsLabel" type="Label" parent="MarginContainer/VBoxContainer/GridColumnsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Grid Columns:"
+vertical_alignment = 1
+
+[node name="ColumnsSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/GridColumnsRow"]
+layout_mode = 2
+min_value = 2.0
+max_value = 10.0
+step = 1.0
+value = 5.0
+
+[node name="GridRowsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridRowsLabel" type="Label" parent="MarginContainer/VBoxContainer/GridRowsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Grid Rows:"
+vertical_alignment = 1
+
+[node name="RowsSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/GridRowsRow"]
+layout_mode = 2
+min_value = 1.0
+max_value = 20.0
+step = 1.0
+value = 4.0
+
+[node name="GridLineColorRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridLineColorLabel" type="Label" parent="MarginContainer/VBoxContainer/GridLineColorRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Grid Line Color:"
+vertical_alignment = 1
+
+[node name="LineColorBtn" type="Button" parent="MarginContainer/VBoxContainer/GridLineColorRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(80, 0)
+text = "Choose..."
+
+[node name="OutputDeviceRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OutputDeviceLabel" type="Label" parent="MarginContainer/VBoxContainer/OutputDeviceRow"]
+layout_mode = 2
+text = "Output Device:"
+vertical_alignment = 1
+
+[node name="OutputDeviceOption" type="OptionButton" parent="MarginContainer/VBoxContainer/OutputDeviceRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseBtn" type="Button" parent="MarginContainer/VBoxContainer/ButtonBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(70, 0)
+text = "Close"

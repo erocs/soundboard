@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://csndbtn01abc0"]
+
+[ext_resource type="Script" path="res://scripts/soundboard/sound_button.gd" id="1_script"]
+
+[node name="SoundButton" type="Button"]
+custom_minimum_size = Vector2(120, 120)
+size_flags_vertical = 0
+flat = true
+clip_children = 1
+script = ExtResource("1_script")
+
+[node name="BGRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.2, 0.4, 0.8, 1)
+
+[node name="ImageRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EffectOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+visible = false
+
+[node name="PlayingIndicator" type="Label" parent="."]
+layout_mode = 1
+anchor_right = 0.4
+anchor_bottom = 0.35
+mouse_filter = 2
+text = "▶"
+visible = false
+
+[node name="MissingIndicator" type="Label" parent="."]
+layout_mode = 1
+anchor_right = 0.4
+anchor_bottom = 0.35
+mouse_filter = 2
+text = "✕"
+visible = false
+
+[node name="ButtonLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_top = 0.65
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+text = "Button"
+horizontal_alignment = 1
+vertical_alignment = 2
+clip_text = true

@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfilmgr01ab0"]
+
+[ext_resource type="Script" path="res://scripts/file_manager/file_manager.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://cwavefrm01ab0" path="res://scenes/audio_editor/waveform_display.tscn" id="2_waveform"]
+
+[node name="FileManagerPanel" type="Window"]
+title = "File Manager"
+size = Vector2i(720, 480)
+visible = false
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 210
+
+[node name="FileTree" type="Tree" parent="MarginContainer/VBoxContainer/HSplitContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+size_flags_horizontal = 3
+
+[node name="PreviewContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="NoSelectionLabel" type="Label" parent="MarginContainer/VBoxContainer/HSplitContainer/PreviewContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Select a file to preview"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PreviewWaveform" parent="MarginContainer/VBoxContainer/HSplitContainer/PreviewContainer" instance=ExtResource("2_waveform")]
+layout_mode = 2
+
+[node name="PreviewImage" type="TextureRect" parent="MarginContainer/VBoxContainer/HSplitContainer/PreviewContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+visible = false
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WaveControls" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/PreviewContainer"]
+layout_mode = 2
+visible = false
+
+[node name="PlayPreviewBtn" type="Button" parent="MarginContainer/VBoxContainer/HSplitContainer/PreviewContainer/WaveControls"]
+layout_mode = 2
+custom_minimum_size = Vector2(64, 0)
+text = "Play"
+
+[node name="Toolbar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ImportSoundBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+text = "Import Sound..."
+
+[node name="ImportImageBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+text = "Import Image..."
+
+[node name="RenameBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+disabled = true
+text = "Rename"
+
+[node name="DeleteBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+disabled = true
+text = "Delete"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AssignBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+disabled = true
+text = "Assign to Button..."
+
+[node name="CloseBtn" type="Button" parent="MarginContainer/VBoxContainer/Toolbar"]
+layout_mode = 2
+text = "Close"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
