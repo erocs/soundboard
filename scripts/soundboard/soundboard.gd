@@ -22,6 +22,12 @@ func _ready() -> void:
 	_grid.button_moved.connect(_on_grid_button_moved)
 	reload()
 
+func get_columns() -> int:
+	return _grid.columns
+
+func get_rows() -> int:
+	return _grid.rows
+
 func set_columns(n: int) -> void:
 	_grid.set_columns(n)
 

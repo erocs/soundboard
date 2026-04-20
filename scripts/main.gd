@@ -1,5 +1,10 @@
 extends Control
 
+const CELL_SIZE := 120  # must match GridDisplay.CELL_SIZE
+
+var _grid_columns: int = 5
+var _grid_rows: int = 4
+
 # Menu item IDs
 const MENU_EDIT_LABEL    := 0
 const MENU_ASSIGN_WAV    := 1
@@ -28,6 +33,7 @@ const MENU_SET_EFFECT    := 10
 @onready var _files_btn: Button       = $VBoxContainer/TopBar/FilesBtn
 @onready var _settings_btn: Button    = $VBoxContainer/TopBar/SettingsBtn
 @onready var _vol_slider: HSlider     = $VBoxContainer/TopBar/VolSlider
+@onready var _top_bar: HBoxContainer  = $VBoxContainer/TopBar
 
 # Context for the right-click menu
 var _context_config: ButtonConfig = null
@@ -60,6 +66,10 @@ func _ready() -> void:
 	_file_manager.assign_requested.connect(_on_fm_assign_requested)
 	_file_manager.file_renamed.connect(_on_fm_file_renamed)
 	_file_manager.file_deleted.connect(_on_fm_file_deleted)
+	await get_tree().process_frame
+	_grid_columns = _soundboard.get_columns()
+	_grid_rows = _soundboard.get_rows()
+	_update_window_size()
 
 # ── Top bar ──────────────────────────────────────────────────────────────
 
@@ -112,9 +122,21 @@ func _on_settings_pressed() -> void:
 
 func _on_grid_columns_changed(columns: int) -> void:
 	_soundboard.set_columns(columns)
+	_grid_columns = columns
+	_update_window_size()
 
 func _on_grid_rows_changed(rows: int) -> void:
 	_soundboard.set_rows(rows)
+	_grid_rows = rows
+	_update_window_size()
+
+func _update_window_size() -> void:
+	var top_h := int(_soundboard.global_position.y)
+	if top_h <= 0:
+		top_h = 48  # TopBar minimum (44) + VBoxContainer separation (4)
+	var grid_w := _grid_columns * CELL_SIZE
+	var min_w := int(_top_bar.get_combined_minimum_size().x)
+	DisplayServer.window_set_size(Vector2i(maxi(grid_w, min_w), top_h + _grid_rows * CELL_SIZE))
 
 func _on_grid_line_color_changed(color: Color) -> void:
 	_soundboard.set_line_color(color)
