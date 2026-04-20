@@ -113,7 +113,14 @@ func _on_playback_started(path: String) -> void:
 			"infinite": _playing_indicator.text = "∞"
 			"count":    _playing_indicator.text = "×%d" % config.repeat_count
 			_:          _playing_indicator.text = "▶"
-		var eff_mat := _effect_materials[randi() % _effect_materials.size()]
+		var eff_idx: int
+		match config.effect:
+			"plasma": eff_idx = 0
+			"fire":   eff_idx = 1
+			"glitch": eff_idx = 2
+			"ripple": eff_idx = 3
+			_:        eff_idx = randi() % _effect_materials.size()
+		var eff_mat := _effect_materials[eff_idx]
 		eff_mat.set_shader_parameter("shape_type", _shape_index(config.shape))
 		_effect_overlay.material = eff_mat
 		_playing_indicator.show()

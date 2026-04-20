@@ -12,3 +12,4 @@ var slot: int = -1
 var repeat_mode: String = "off"   # "off" | "count" | "infinite"
 var repeat_count: int = 2         # total plays when repeat_mode == "count"
 var shape: String = "square"      # "square" | "circle" | "star"
+var effect: String = "random"     # "random" | "plasma" | "fire" | "glitch" | "ripple"

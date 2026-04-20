@@ -11,6 +11,7 @@ const MENU_ADD_SOUND     := 5
 const MENU_ADD_SUBFOLDER := 6
 const MENU_SET_REPEAT    := 7
 const MENU_SET_SHAPE     := 8
+const MENU_SET_EFFECT    := 10
 
 @onready var _soundboard              = $VBoxContainer/SoundboardPanel
 @onready var _context_menu: PopupMenu = $ContextMenu
@@ -205,6 +206,7 @@ func _show_context_menu(config: ButtonConfig) -> void:
 		_context_menu.add_item("Assign WAV...", MENU_ASSIGN_WAV)
 		_context_menu.add_item("Set Repeat...", MENU_SET_REPEAT)
 		_context_menu.add_item("Set Shape...",  MENU_SET_SHAPE)
+		_context_menu.add_item("Set Effect...", MENU_SET_EFFECT)
 	elif config.type == "folder":
 		_context_menu.add_item("Add Sound to Folder...", MENU_ADD_SOUND)
 		_context_menu.add_item("Add Subfolder...",        MENU_ADD_SUBFOLDER)
@@ -224,6 +226,7 @@ func _on_context_menu_id_pressed(id: int) -> void:
 		MENU_ADD_SUBFOLDER: _show_add_to_folder_dialog(_context_config, "folder")
 		MENU_SET_REPEAT:    _show_repeat_dialog(_context_config)
 		MENU_SET_SHAPE:     _show_shape_dialog(_context_config)
+		MENU_SET_EFFECT:    _show_effect_dialog(_context_config)
 
 func _delete_context_item() -> void:
 	if _context_parent == null:
@@ -502,6 +505,71 @@ func _show_repeat_dialog(config: ButtonConfig) -> void:
 			0: config.repeat_mode = "off"
 			1: config.repeat_mode = "count"; config.repeat_count = int(count_spin.value)
 			2: config.repeat_mode = "infinite"
+		if _context_parent == null:
+			_soundboard.update_button(config)
+		else:
+			_soundboard.update_in_tree(config)
+		_refresh_open_folder()
+		win.queue_free()
+	)
+	cancel_btn.pressed.connect(win.queue_free)
+	win.close_requested.connect(win.queue_free)
+	win.popup_centered()
+
+func _show_effect_dialog(config: ButtonConfig) -> void:
+	var win := Window.new()
+	win.title = "Playback Effect"
+	win.size = Vector2i(260, 160)
+	win.exclusive = true
+	win.wrap_controls = true
+
+	var margin := MarginContainer.new()
+	margin.anchor_right = 1.0
+	margin.anchor_bottom = 1.0
+	for side in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
+		margin.add_theme_constant_override(side, 12)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 10)
+
+	var option := OptionButton.new()
+	option.add_item("Random",  0)
+	option.add_item("Plasma",  1)
+	option.add_item("Fire",    2)
+	option.add_item("Glitch",  3)
+	option.add_item("Ripple",  4)
+	match config.effect:
+		"plasma": option.selected = 1
+		"fire":   option.selected = 2
+		"glitch": option.selected = 3
+		"ripple": option.selected = 4
+		_:        option.selected = 0
+
+	var btn_bar := HBoxContainer.new()
+	var spacer  := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var apply_btn  := Button.new()
+	apply_btn.text = "Apply"
+	apply_btn.custom_minimum_size = Vector2(80, 0)
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.custom_minimum_size = Vector2(80, 0)
+	btn_bar.add_child(spacer)
+	btn_bar.add_child(apply_btn)
+	btn_bar.add_child(cancel_btn)
+
+	var fill := Control.new()
+	fill.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(option)
+	vbox.add_child(fill)
+	vbox.add_child(btn_bar)
+	margin.add_child(vbox)
+	win.add_child(margin)
+	add_child(win)
+
+	apply_btn.pressed.connect(func():
+		const EFFECTS := ["random", "plasma", "fire", "glitch", "ripple"]
+		config.effect = EFFECTS[option.selected]
 		if _context_parent == null:
 			_soundboard.update_button(config)
 		else:

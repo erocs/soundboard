@@ -31,6 +31,9 @@ var _capture_effect: AudioEffectCapture = null
 var _record_start_usec: int = 0
 var _input_gain: float = 1.0
 var _sys_record_pid := -1
+var _device_names: PackedStringArray = []
+var _ffmpeg_index: int = -1
+var _ffmpeg_available: bool = false
 
 func _ready() -> void:
 	_setup_capture_bus()
@@ -38,11 +41,8 @@ func _ready() -> void:
 	_save_btn.disabled = true
 	_discard_btn.disabled = true
 	_edit_btn.disabled = true
-	_source_option.add_item("Microphone", 0)
-	_source_option.add_item("System Audio", 1)
-	if OS.execute("where", ["ffmpeg"], []) != 0:
-		_source_option.set_item_disabled(1, true)
-		_source_option.set_item_text(1, "System Audio (ffmpeg not found)")
+	_ffmpeg_available = OS.execute("where", ["ffmpeg"], []) == 0
+	_populate_sources()
 	_source_option.item_selected.connect(_on_source_changed)
 	_record_btn.pressed.connect(_on_record_pressed)
 	_play_btn.pressed.connect(_on_play_pressed)
@@ -53,7 +53,45 @@ func _ready() -> void:
 	_gain_slider.value_changed.connect(_on_gain_changed)
 	_preview_player.finished.connect(_on_preview_finished)
 	close_requested.connect(_on_close_requested)
+	visibility_changed.connect(_on_visibility_changed)
 	_filename_edit.text = _generate_filename()
+
+func _on_visibility_changed() -> void:
+	if visible and not _recording:
+		_populate_sources()
+
+func _populate_sources() -> void:
+	var prev_device := ""
+	if _source_option.selected >= 0 and _source_option.selected < _device_names.size():
+		prev_device = _device_names[_source_option.selected]
+
+	_source_option.clear()
+	_device_names = AudioServer.get_input_device_list()
+
+	for dev in _device_names:
+		_source_option.add_item(dev)
+
+	_ffmpeg_index = _source_option.item_count
+	if _ffmpeg_available:
+		_source_option.add_item("System Audio (ffmpeg loopback)")
+	else:
+		_source_option.add_item("System Audio (ffmpeg not found)")
+		_source_option.set_item_disabled(_ffmpeg_index, true)
+
+	var restored := false
+	if not prev_device.is_empty():
+		for i in _device_names.size():
+			if _device_names[i] == prev_device:
+				_source_option.selected = i
+				restored = true
+				break
+	if not restored:
+		_source_option.selected = 0
+
+	_on_source_changed(_source_option.selected)
+
+func _is_mic_source() -> bool:
+	return _source_option.selected != _ffmpeg_index
 
 func _setup_capture_bus() -> void:
 	var bus_idx := AudioServer.get_bus_index(BUS_NAME)
@@ -69,7 +107,7 @@ func _setup_capture_bus() -> void:
 	_player.stream = AudioStreamMicrophone.new()
 
 func _on_source_changed(_index: int) -> void:
-	var is_mic := _source_option.selected == 0
+	var is_mic := _is_mic_source()
 	_meter_row.visible = is_mic
 	_gain_row.visible = is_mic
 
@@ -78,7 +116,7 @@ func _process(_delta: float) -> void:
 		return
 	var elapsed := (Time.get_ticks_usec() - _record_start_usec) / 1_000_000.0
 	_status_label.text = "Recording: %.1fs" % elapsed
-	if _source_option.selected != 0 or _capture_effect == null:
+	if not _is_mic_source() or _capture_effect == null:
 		return
 	var available := _capture_effect.get_frames_available()
 	if available <= 0:
@@ -110,7 +148,10 @@ func _start_recording() -> void:
 	_source_option.disabled = true
 	_record_start_usec = Time.get_ticks_usec()
 	_recording = true
-	if _source_option.selected == 0:
+	if _is_mic_source():
+		var sel := _source_option.selected
+		if sel < _device_names.size():
+			AudioServer.input_device = _device_names[sel]
 		_sample_rate = int(AudioServer.get_mix_rate())
 		_capture_effect.clear_buffer()
 		_player.play()
@@ -136,7 +177,7 @@ func _stop_recording() -> void:
 	_record_btn.text = "Record"
 	_source_option.disabled = false
 	_load_wav_btn.disabled = false
-	if _source_option.selected == 0:
+	if _is_mic_source():
 		_player.stop()
 		_level_meter.value = 0.0
 		if _pcm.size() > 0:

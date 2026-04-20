@@ -259,6 +259,7 @@ func _dict_to_config(d: Dictionary) -> ButtonConfig:
 	cfg.repeat_mode = d.get("repeat_mode", "off")
 	cfg.repeat_count = int(d.get("repeat_count", 2))
 	cfg.shape = d.get("shape", "square")
+	cfg.effect = d.get("effect", "random")
 	if cfg.type == "folder" and d.has("children") and d["children"] is Array:
 		for child_data in d["children"]:
 			if child_data is Dictionary:
@@ -277,6 +278,7 @@ func _config_to_dict(cfg: ButtonConfig) -> Dictionary:
 		"repeat_mode": cfg.repeat_mode,
 		"repeat_count": cfg.repeat_count,
 		"shape": cfg.shape,
+		"effect": cfg.effect,
 	}
 	if cfg.type == "folder":
 		d["children"] = []
